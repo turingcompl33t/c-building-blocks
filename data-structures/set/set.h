@@ -21,7 +21,7 @@ typedef uint64_t hash_t;
 //  the user intends to store in the set, invoking
 //  this function deallocates all of the storage 
 //  for the specified item.
-typedef void   (*deleter_f)(void*);
+typedef void (*deleter_f)(void*);
 
 // A user-provider hash function.
 //
@@ -31,7 +31,14 @@ typedef void   (*deleter_f)(void*);
 //  this function returns a hash of the provided 
 //  data that enables the set to internally identify
 //  the item.
-typedef hash_t (*hasher_f) (void*);
+typedef hash_t (*hasher_f)(void*);
+
+// A user-provider iterator function.
+// 
+// This function signature is the signature
+// expected by set_for_each(). The function is
+// invoked on the user data for each item in the set.
+typedef void (*iterator_f)(void*);
 
 struct set_item;
 
@@ -99,6 +106,15 @@ bool set_add(set_t* set, void* data);
 // from the set. In the event that the item
 // is not found, this function returns `false`.
 //
+// Note, however, that this function DOES NOT
+// attempt to deallocate the user-provided data,
+// even though it has the ability to because the
+// set maintains an appropriate delete function.
+// The user must pass a pointer to the removed
+// data to this function in order to remove it,
+// thus freeing the data out from under the user
+// would present a poor API decision (in my view).
+//
 // Arguments:
 //  set  - pointer to existing set data structure
 //  data - user provided data to remove
@@ -132,5 +148,15 @@ bool set_contains(set_t* set, void* data);
 //  The count of items in the set
 //  0 on failure
 size_t set_count(set_t* set);
+
+// set_for_each()
+//
+// Invoke the specified iterator function
+// on each item in the set.
+//
+// Arguments:
+//  set      - pointer to existing set data structure
+//  iterator - the function invoked on each set item
+void set_for_each(set_t* set, iterator_f iterator);
 
 #endif // SET_H

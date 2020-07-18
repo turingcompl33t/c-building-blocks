@@ -44,3 +44,8 @@ size_t set_count(set_t* set)
 {
     return 0;
 }
+
+void set_for_each(set_t* set, iterator_f iterator)
+{
+    return;
+}
