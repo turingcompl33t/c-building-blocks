@@ -1,13 +1,13 @@
-# data-structures/queue/Makefile
+# data-structures/intrusive-list/Makefile
 #
-# Makefile for queue data structure.
+# Makefile for intrusive list data structure.
 
 CC = gcc
 CFLAGS = -Wall -Werror -pedantic -std=c11 -ggdb
 
 CHECK_LIBS = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 
-LIB = queue
+LIB = intrusive_list
 
 lib: $(LIB).o
 

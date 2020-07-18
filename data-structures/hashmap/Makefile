@@ -1,13 +1,13 @@
-# data-structures/deque/Makefile
+# data-structures/stack/Makefile
 #
-# Makefile for deque data structure.
+# Makefile for stack data structure.
 
 CC = gcc
 CFLAGS = -Wall -Werror -pedantic -std=c11 -ggdb
 
 CHECK_LIBS = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 
-LIB = deque
+LIB = stack
 
 lib: $(LIB).o
 
