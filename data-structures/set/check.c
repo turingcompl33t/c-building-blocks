@@ -153,8 +153,8 @@ END_TEST
  
 Suite* stack_suite(void)
 {
-    Suite* s = suite_create("stack");
-    TCase* tc_core = tcase_create("stack-core");
+    Suite* s = suite_create("set");
+    TCase* tc_core = tcase_create("set-core");
     
     tcase_add_test(tc_core, test_set_new);
     tcase_add_test(tc_core, test_set_add_remove);
