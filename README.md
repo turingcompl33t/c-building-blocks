@@ -25,7 +25,7 @@ Creating a fork essentially creates a complete copy of this repository under you
 
 **Working in your Fork**
 
-Now that you have your own local copy of the fork, you're ready to begin working in the repository. However, before doing so, I recommend switching a different git _branch_. After cloning, you will be located on the `master` branch, which is the default branch for the project. However, switching to a new branch to work on will make the process of pulling in upstream changes to the original repository cleaner.
+Now that you have your own local copy of the fork, you're ready to begin working in the repository. However, before doing so, I recommend switching to a different git _branch_. After cloning, you will be located on the `master` branch, which is the default branch for the project. However, switching to a new branch to work on will make the process of pulling in upstream changes to the original repository cleaner.
 
 To create a new branch, run the command:
 
@@ -67,7 +67,7 @@ Congratulations! You should now be fully equipped to work with this project, and
 
 ### Unit Testing
 
-Each module within this project includes some pre-written unit tests to make checking the correctness of your implementation simpler. The unit test driver programs utilize the [Check](https://libcheck.github.io/check/index.html) unit testing library for C to make simplify the process of writing tests. Thus, in order to run the automated tests, you need to setup `Check` on the system on which you plan to develop. A description of the process for accomplishing this follows below.
+Each module within this project includes some pre-written unit tests to make checking the correctness of your implementation simpler. The unit test driver programs utilize the [Check](https://libcheck.github.io/check/index.html) unit testing library for C to simplify the process of writing tests. Thus, in order to run the automated tests, you need to setup `Check` on the system on which you plan to develop. A description of the process for accomplishing this follows below.
 
 On a Linux distribution such as Ubuntu that utilizes `apt` to manage packages, one may install the `Check` library with the command:
 
