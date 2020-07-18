@@ -49,7 +49,24 @@ set_t* set_new(deleter_f deleter, hasher_f hasher)
 
 void set_delete(set_t* set)
 {
-    return;
+    if (NULL == set)
+    {
+        return;
+    }
+
+    set_item_t* current = set->head;
+    while (current != NULL)
+    {
+        set_item_t* tmp = current->next;
+
+        set->deleter(current->data);
+        free(current);
+
+        current = tmp;
+    }
+
+    free(set);
+    set = NULL;
 }
 
 bool set_add(set_t* set, void* data)
@@ -158,7 +175,23 @@ bool set_contains(set_t* set, void* data)
 
 size_t set_count(set_t* set)
 {
-    return set->count;
+    return (NULL == set) ? 0 : set->count;
+}
+
+void set_for_each(set_t* set, iterator_f iterator)
+{
+    if (NULL == set || set->count == 0)
+    {
+        return;
+    }
+
+    set_item_t* current;
+    for (current = set->head;
+        current != NULL;
+        current = current->next)
+    {
+        iterator(current->data);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -176,8 +209,4 @@ static set_item_t* new_item(void* data, hash_t hash)
     item->hash = hash;
 
     return item;
-}
-void set_for_each(set_t* set, iterator_f iterator)
-{
-    return;
 }
