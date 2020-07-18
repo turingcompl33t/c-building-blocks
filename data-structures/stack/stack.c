@@ -23,9 +23,9 @@ bool stack_delete(stack_t* stack)
     return false;
 }
 
-void stack_push(stack_t* stack, void* data)
+bool stack_push(stack_t* stack, void* data)
 {
-    return;
+    return false;
 }
 
 void* stack_pop(stack_t* stack)
