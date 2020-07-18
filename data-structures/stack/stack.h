@@ -56,9 +56,14 @@ bool stack_delete(stack_t* stack);
 // 
 // Push a new item onto the top of the stack.
 //
-// This function fails silently if an invalid stack
-// pointer (`stack`) is passed as an argument.
-void stack_push(stack_t* stack, void* data);
+// This function returns `false` in the event
+// that the specified item is failed to be
+// pushed onto the stack, for any reason.
+//
+// Returns:
+//  `true` on successful push
+//  `false` otherwise
+bool stack_push(stack_t* stack, void* data);
 
 // stack_pop()
 //
