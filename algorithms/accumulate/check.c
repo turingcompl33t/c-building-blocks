@@ -42,6 +42,9 @@ START_TEST(test_accumulate_add)
 
     const int a2 = accumulate(array, 4, N_ITEMS, 0, binary_add);
     ck_assert_msg(a2 == 26, "accumulate() returned unexpected result for binary add");
+
+    const int a3 = accumulate(array, 5, 4, 0, binary_add);
+    ck_assert_msg(a3 == 0, "accumulate() returned incorrect result when provided invalid indices");
 }
 END_TEST
 
@@ -55,6 +58,9 @@ START_TEST(test_accumulate_mul)
 
     const int a2 = accumulate(array, 0, N_ITEMS, 0, binary_mul);
     ck_assert_msg(a2 == 0, "accumulate() returned unexpected result for binary mul");
+
+    const int a3 = accumulate(array, 5, 4, 1, binary_mul);
+    ck_assert_msg(a3 == 0, "accumulate() returned incorrect result when provided invalid indices");
 }
 END_TEST
 

@@ -50,6 +50,10 @@ typedef int (*binary_op_f)(int a, int b);
 // index preceding `last`, via the binary 
 // operator `op`.
 //
+// If invalid indices are provided 
+// (e.g. first is greater than or equal to last)
+// the function return 0.
+//
 // Arguments:
 //  array - the array of values to accumulate
 //  first - the index at which to begin accumulation
