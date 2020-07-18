@@ -2,6 +2,10 @@
 
 Essential Building Blocks for Learning and Working with C.
 
+### Overview
+
+This project is intended to serve as an aid to those learning C programming. As such, it 
+
 ### Contents
 
 - [Data Structures](./data-structures)
