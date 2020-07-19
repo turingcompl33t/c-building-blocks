@@ -72,6 +72,8 @@ The default branch for this project is the `master` branch. On this branch you w
 
 It is _highly recommended_ that you do not examine the reference implementation for any module prior to completing the module yourself. This course of action will prove ever more tempting the longer you spend working on a specific problem, but such times of struggle and eventual revelation are exactly the instances in which we most improve and grow as software developers.
 
+Furthermore, the reference implementations are by no means perfect or the "right way" to implement something - there are often many ways to solve the problem posed by each module. As it stands, the reference implementations pass the tests associated with each module, but have undergone little testing beyond that, so bugs may yet be present therein. If you find one, let me know!
+
 ### Unit Testing
 
 Each module within this project includes some pre-written unit tests to make checking the correctness of your implementation simpler. The unit test driver programs utilize the [Check](https://libcheck.github.io/check/index.html) unit testing library for C to simplify the process of writing tests. Thus, in order to run the automated tests, you need to setup `Check` on the system on which you plan to develop. A description of the process for accomplishing this follows below.
