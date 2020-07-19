@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../intrusive-list/intrusive_list.h"
+#include "intrusive_list.h"
 
 // Background:
 //

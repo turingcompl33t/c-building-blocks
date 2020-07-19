@@ -30,6 +30,11 @@ list_entry_t* list_pop_back(list_entry_t* head)
     return NULL;
 }
 
+void list_remove_entry(list_entry_t* head, list_entry_t* entry)
+{
+    return;
+}
+
 size_t list_count(list_entry_t* head)
 {
     return 0;

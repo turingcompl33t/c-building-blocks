@@ -85,6 +85,15 @@ list_entry_t* list_pop_front(list_entry_t* head);
 //  NULL if the list is empty
 list_entry_t* list_pop_back(list_entry_t* head);
 
+// list_remove_entry()
+//
+// Removes the specified entry from the intrusive list.
+//
+// Arguments:
+//  head  - pointer to the list entry that represents head of the list
+//  entry - pointer to the list entry to be removed from the list 
+void list_remove_entry(list_entry_t* head, list_entry_t* entry);
+
 // list_count()
 //
 // Returns the count of elements in the list.
