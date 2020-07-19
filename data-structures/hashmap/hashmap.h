@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "../intrusive-list/intrusive_list.h"
+
 // Background:
 //
 // TODO
@@ -29,7 +31,9 @@ typedef bool (*comparator_f)(void*, void*);
 // deallocates all of the memory for it.
 typedef void (*deleter_f)(void*);
 
-struct bucket;
+// Buckets in the internal table are represented as 
+// the heads of intrusive linked-list structures.
+typedef list_entry_t bucket_t;
 
 // The hashmap data structure.
 typedef struct hashmap
@@ -40,7 +44,7 @@ typedef struct hashmap
     deleter_f    deleter;
 
     // The array of buckets that composes the internal table.
-    struct bucket* buckets;
+    bucket_t* buckets;
 
     // The current length of the bucket array.
     size_t n_buckets;
