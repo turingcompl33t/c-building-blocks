@@ -42,6 +42,9 @@ typedef struct hashmap
     // The array of buckets that composes the internal table.
     struct bucket* buckets;
 
+    // The current length of the bucket array.
+    size_t n_buckets;
+
     // The total number of items in the map.
     size_t count;
 } hashmap_t;
