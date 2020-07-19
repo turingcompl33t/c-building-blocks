@@ -10,8 +10,9 @@ The objective is to look over the module definitions and the expected functional
 
 ### Contents
 
-- [Data Structures](./data-structures)
 - [Algorithms](./algorithms)
+- [Concurrency](./concurrency)
+- [Data Structures](./data-structures)
 
 ### Working in this Project
 
