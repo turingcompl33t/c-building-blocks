@@ -25,18 +25,26 @@ static point_t* make_point(uint64_t x, uint64_t y)
     return p;
 }
 
-// The hash function provided for the point type.
-static hash_t hash_point(void* p)
-{
-    point_t* as_point = (point_t*)p;
-    return as_point->x;
-}
-
 // The delete function provided for the point type.
 static void delete_point(void* p)
 {
     point_t* as_point = (point_t*)p;
     free(as_point);
+}
+
+// The hash function provided for the key type (string).
+static hash_t hash_key(void* ptr)
+{
+    char* as_str = (char*)ptr;
+    size_t len = strlen(as_str);
+
+    hash_t hash = 0;
+    for (size_t i = 0; i < len; ++i)
+    {
+        hash += (unsigned char) as_str[i];
+    }
+
+    return hash;
 }
 
 // The comparison function provided for the key type (string).
@@ -55,8 +63,10 @@ START_TEST(test_hashmap_new)
     hashmap_t* map1 = hashmap_new(NULL, NULL, NULL);
     ck_assert_msg(NULL == map1, "hashmap_new() returned non-NULL on invalid input");
 
-    hashmap_t* map2 = hashmap_new(hash_point, compare_keys, delete_point);
+    hashmap_t* map2 = hashmap_new(hash_key, compare_keys, delete_point);
     ck_assert_msg(map2 != NULL, "hashmap_new() returned NULL");
+
+    ck_assert_msg(hashmap_count(map2) == 0, "hashmap_count() return nonzero on empty map");
 
     hashmap_delete(map2);
 }
@@ -64,7 +74,7 @@ END_TEST
 
 START_TEST(test_hashmap_insert)
 {
-    hashmap_t* map = hashmap_new(hash_point, compare_keys, delete_point);
+    hashmap_t* map = hashmap_new(hash_key, compare_keys, delete_point);
     ck_assert_msg(map != NULL, "hashmap_new() returned NULL");
 
     ck_assert_msg(hashmap_count(map) == 0, "hashmap_count() returned incorrect count");
@@ -100,8 +110,8 @@ START_TEST(test_hashmap_insert)
     ck_assert_msg(hashmap_count(map) == 2, "hashmap_count() returned incorrect count");
 
     point_t* ret = (point_t*)out3;
-    ck_assert(ret->x == 3);
-    ck_assert(ret->y == 3);
+    ck_assert(ret->x == 1);
+    ck_assert(ret->y == 1);
     delete_point(ret);
 
     hashmap_delete(map);
@@ -110,7 +120,7 @@ END_TEST
 
 START_TEST(test_hashmap_remove)
 {
-    hashmap_t* map = hashmap_new(hash_point, compare_keys, delete_point);
+    hashmap_t* map = hashmap_new(hash_key, compare_keys, delete_point);
     ck_assert_msg(map != NULL, "hashmap_new() returned NULL");
 
     ck_assert_msg(hashmap_count(map) == 0, "hashmap_count() returned incorrect count");
