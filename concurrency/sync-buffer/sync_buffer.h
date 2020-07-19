@@ -87,7 +87,11 @@ bool sync_buffer_delete(sync_buffer_t* buffer);
 // Arguments:
 //  buffer - pointer to an existing buffer data structure
 //  data   - user-provided data to insert
-void sync_buffer_put(sync_buffer_t* buffer, void* data);
+//
+// Returns:
+//  `true` if the new item is successfully inserted
+//  `false` on failure (allocation failure)
+bool sync_buffer_put(sync_buffer_t* buffer, void* data);
 
 // sync_buffer_try_put()
 //

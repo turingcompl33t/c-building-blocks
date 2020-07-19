@@ -13,7 +13,7 @@ bool sync_buffer_delete(sync_buffer_t* buffer)
     return false;
 }
 
-void sync_buffer_put(sync_buffer_t* buffer, void* data)
+bool sync_buffer_put(sync_buffer_t* buffer, void* data)
 {
     return;
 }
