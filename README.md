@@ -65,6 +65,12 @@ This command _rebases_ your development branch on top of the updated `master` br
 
 Congratulations! You should now be fully equipped to work with this project, and perhaps you even learned a little bit about `git` along the way.
 
+### Reference Implementations
+
+The default branch for this project is the `master` branch. On this branch you will find that each module has appropriate definitions and a description of the problem to be solved, but the implementation is completely absent. Of course, this is the intention. However, for each module, a reference implementation of a solution to the problem is provided on a distinct branch - the `reference` branch. This is intended to allow you to compare your solution against another and potentially learn the tradeoffs of various design and implementation decisions in the process.
+
+It is _highly recommended_ that you do not examine the reference implementation for any module prior to completing the module yourself. This course of action will prove ever more tempting the longer you spend working on a specific problem, but such times of struggle and eventual revelation are exactly the instances in which we most improve and grow as software developers.
+
 ### Unit Testing
 
 Each module within this project includes some pre-written unit tests to make checking the correctness of your implementation simpler. The unit test driver programs utilize the [Check](https://libcheck.github.io/check/index.html) unit testing library for C to simplify the process of writing tests. Thus, in order to run the automated tests, you need to setup `Check` on the system on which you plan to develop. A description of the process for accomplishing this follows below.

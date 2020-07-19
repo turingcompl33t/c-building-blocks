@@ -12,7 +12,82 @@
 
 // Background:
 //
-// TODO
+// A map is a general abstraction for a key / value store.
+// With a map, we can insert a value keyed by the associated
+// key, and subsequently retrieve, modify, or remove this
+// value with knowledge of the key only. Maps are incredibly
+// important data structures that occur in countless subfields
+// of computer science.
+//
+// A hashmap is one possible implementation of the map API in
+// which keys are passed through a hash function in order to 
+// derive an index into an internal table managed by the map.
+// Such a procedure is useful because it allows for efficient
+// insert, remove, and search operations that operate in 
+// constant time (O(1)) rather than variations that scale with
+// the number of items in the map (O(n)). 
+//
+// The above description does have one complication, however:
+// what happens in the event that two keys hash to the same
+// value? In this case, both key / value pairs map to the same
+// bucket in the table, and we experience what is known as a
+// collision. There are many different hashmap implementations 
+// that implement various methods of dealing with this situation.
+// One common and relatively simple method for dealing with collisions
+// is a technique known as separate chaining. In separate chaining,
+// each bucket is not a single item in the hashtable, but rather
+// is the head of a list of items that map to that particular bucket.
+// When two or more keys map to the same bucket in the table,
+// we simply extend the list for that bucket with the new item.
+//
+// Separate chaining is the collision management technique
+// utilized in this particular hashmap implementation.
+//
+// One other complication that arises in hashmap implementation
+// is the management of table resize operations. Above, I claimed
+// that insert, remove, and find operations on a hashmap operate 
+// in constant time. This is true so long as the number of items 
+// that map to each particular bucket in the table is small. As 
+// the number of items in a bucket grows large, we begin to require
+// a greater number of linear searches through the bucket lists
+// when performing any of the hashmap operations, degrading the
+// expected performance of the hashmap to time linear in the number
+// of items in the map - exactly what the hashmap was meant to avoid!
+//
+// The remedy for this issue is periodic resizing of the internal
+// table that the hashmap uses to manage its items. Once the number
+// of items in the table exceeds a certain threshold, the number of
+// buckets in the table is increased and the table's items are 
+// re-inserted into this new table. Such resize operations are relatively
+// expensive, but heuristics are typically employed to ensure that they
+// occur less and less frequently as the size of the hashmap continues
+// to grow.
+//
+// For the purposes of this implementation, utilize the following
+// parameters and heuristics to determine hashmap resize behavior:
+//
+// - The desired load factor of the table should be set at 0.75.
+//   The load factor of a hashmap is the threshold percentage of 
+//   the overal capacity of the table (number of buckets) above which 
+//   a resize operation will take place. A load factor of 0.75 
+//   is widely recognized as providing generally competetive performance.
+// - In accordance with the above description of the desired load
+//   factor, a resize of the hashmap should take place when:
+//
+//              N_ITEMS >= 0.75*CAPACITY
+// 
+// - On hashmap resize, the total capacity of the table (the 
+//   number of buckets) should double. Again, this parameter is
+//   widely recognized to provide solid performance as it amortizes
+//   the cost of expensive resize operations.
+//
+// Finally, it was mentioned above that a list is typically used
+// to handle hash collisions. A good choice for this list implementation
+// is an "intrusive list" - see the accompanying intrusive_list.h
+// header for more details.
+//
+// It is generally recommended that one complete the intrusive list
+// implementation prior to beginning work on the hashmap itself.
 
 // The type returned by the hash function utilized by this table.
 typedef uint64_t hash_t;
