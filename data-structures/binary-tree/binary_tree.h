@@ -7,6 +7,68 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+// Background:
+//
+// A binary tree is a node-based data structure that,
+// as the name suggests, has properties that make it
+// appear similar to a tree (i.e. the ones outside).
+// More imporantly, however, is the fact that trees are
+// fundamentally imporant data structures in programming
+// and computer science because of their performance 
+// properties - namely that, in the expected case, 
+// operations on the tree (e.g. insert, find remove)
+// take time that scales with the logarithm of the 
+// number of items in the tree (that is O(log(n))).
+// Compare this with data stuctures such as linked-lists
+// and arrays where such operations might take time
+// that scales linearly with the number of items
+// (which is O(n)). This may not seem like a huge 
+// improvement until you look at a graph of linear growth
+// verus logarithmic growth for large values of n. 
+// The benefits should be clear, and hopefully that
+// is sufficiently motivating.
+//
+// Each node in the tree tracks three relationships:
+// 
+//	- Parent: the node appearing "above" it in the tree
+//	- Left Child: one node appearing "below" it in the tree
+//  - Right Child: one node appearing "below" it in the tree
+//
+// The "binary" part of the binary tree's name comes from the
+// fact that it only maintains two child relationships. One 
+// might imagine other tree designs wherein the tree might 
+// maintain an arbitrary number of children, but here we stick
+// with two for the binary tree.
+// 
+// The tree itself is composed of a root node which forms
+// the base of the tree, and from there all relationships 
+// are managed by individual nodes.
+//
+// In this module, we implement a specific type of binary tree
+// called a "binary search tree" (BST). A BST has all the
+// properties of a binary tree, plus some additional requirements:
+//
+// - The value associated with every node in the left subtree 
+//   of a node in a binary search tree is LESS than the value 
+//   associated with the node itself
+// - Similarly, the value associated with every node in the right 
+//   subtree of a node in a binary search tree is GREATER than 
+//   the value associated with the node itself  
+// - Finally, both the left and right subtrees of every node in a
+//   binary search tree are themselves binary search trees (they
+//   also meet the above requirements)
+//
+// Binary trees, and binary search trees in particular, are perfect
+// candidates for the application of recursive algorithms in order
+// to implement necessary operations. That is, in order to implement
+// an effective operation a binary search tree, work out how you might
+// express the operation in terms of individual nodes and the relationships
+// they have with the two subtrees below them. That way, you can apply a
+// base case (of sorts) to the current node, and, if necessary, recurse
+// on the left and right subtrees of the current node to effectively
+// implement an algorithm on an entire tree.
+
+// The ordering type returned by user-provided comparator.
 typedef enum 
 {
 	LESS,
