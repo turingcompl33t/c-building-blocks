@@ -8,6 +8,92 @@
 #include <stdbool.h>
 #include <pthread.h>
 
+// Background:
+//
+// The "bounded buffer" problem or "producer-consumer"
+// problem is a fundamental problem in concurrent programming.
+// This module asks you to implement an internally-synchronized 
+// data structure that solves the bounded buffer problem.
+//
+// A bounded buffer is simply a data structure that is capable 
+// of storing up to a fixed number of items at any one time.
+// That is, at any point after the construction of the buffer,
+// the total number of items in the buffer is in the range:
+//
+//                  [0, CAPACITY]
+//
+// This may not seem like a terribly difficuly invariant to
+// maintain. However, complications arise when multiple threads
+// of execution are introduced. In this scenario, the buffer
+// must implement some form of internal synchronization to 
+// protect its invariants. Internal synchronization simply means
+// that the synchronization provided by the buffer data structure
+// is not visible to consumers of the buffer - any synchronization
+// primitives required to provide thread-safety are maintained
+// internally, and users of the buffer may simply call put()
+// and get() and never worry about providing synchronization 
+// themselves.
+//
+// As alluded to above, the fundamental API of a synchronized
+// buffer consists of put() and get() operations. The put() operation
+// inserts a new item into the buffer while the get() operation
+// removes an item.
+//
+// In a single-threaded environment, the semantics for these two
+// operations are straightforward: if put() is called on a full
+// buffer, the operation fails. Likewise, if get() is called on an
+// empty buffer, the operation fails. These semantics are a direct
+// implication of the fact that in a single-threaded environment,
+// the state of the buffer cannot be altered in any way outside of
+// the main (sole) thread of execution. Thus, a failed put() operation
+// must be followed by a get() operation prior to retrying with 
+// an expectation of success, and likewise a failed get()
+// operation must be followed by a put() operation prior to retrying.
+//
+// These semantics are altered, however, in a multithreaded environment.
+// Now, a failed put() operation, indicating the buffer is currently full,
+// does not require a return and subsequent retry in order to succeed.
+// This results from the fact that while one thread is in the midst of
+// a put() operation that is currently stalled because the buffer is full,
+// another thread may enter the buffer's critical region and perform a
+// get() operation that subsequently allows the producer thread performing
+// the put() to succeed. The situation is analogous for a failed get()
+// and a concurrent put().
+//
+// For this reason, a synchronized bounded buffer intended for multithreaded
+// environments must support two variants of the put() and get() operations:
+//
+// - put() and try_put(): put() blocks the calling thread in the event that 
+//   the buffer is full and waits to be notified by another thread that
+//   the buffer is now nonfull such that the operation can proceed. try_put(),
+//   in contrast, does not block the calling thread in the event that the 
+//   buffer is full when the operation enters the critical region.
+//
+// - get() and try_get(): get() blocks the calling thread in the event that
+//   the buffer is empty and waits to be notified by another thread that
+//   the buffer now nonempty such that the operation can proceed. try_get(),
+//   in contrast, does not block the calling thread in the event that the
+//   buffer is empty when the operation enters the critical region.
+//
+// Supporting both APIs allows users of the synchronized buffer to store
+// items into and load items from the buffer in a way that suits
+// the particular use case in question. 
+//
+// NOTE: Although the API for the synchronized buffer is 
+// agnostic of the order in which items are inserted and removed,
+// such buffers are typically implemented with first-in first-out
+// semantics and thus behave functionally identically to a 
+// synchronized queue.
+//
+// NOTE: The declaration of the sync_buffer type below
+// presumes the use of the pthread API for multithreaded
+// programming. This is not strictly necessary, and 
+// indeed the ISO C11 thread support library may be the
+// more portable choice. However, the documentation and
+// online support for the pthread API far exceeds that for
+// the C11 thread support library in both volume and quality,
+// so I chose to use pthreads for the purposes of this module.
+
 struct buffer_item;
 
 // The synchronized buffer data structure.
