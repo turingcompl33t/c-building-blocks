@@ -1,13 +1,13 @@
-# data-structures/stack/Makefile
+# data-structures/hashmap/Makefile
 #
-# Makefile for stack data structure.
+# Makefile for hashmap data structure.
 
 CC = gcc
 CFLAGS = -Wall -Werror -pedantic -std=c11 -ggdb
 
 CHECK_LIBS = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 
-LIB = stack
+LIB = hashmap
 
 lib: $(LIB).o
 

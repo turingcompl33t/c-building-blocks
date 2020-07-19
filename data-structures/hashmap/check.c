@@ -3,162 +3,165 @@
 
 #include <check.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "stack.h"
+#include "hashmap.h"
 
 // ----------------------------------------------------------------------------
 // Definitions for Testing
 
 typedef struct point
 {
-    float x;
-    float y;
+    uint64_t x;
+    uint64_t y;
 } point_t;
 
-static point_t* make_point(float x, float y)
+static point_t* make_point(uint64_t x, uint64_t y)
 {
     point_t* p = malloc(sizeof(point_t));
     p->x = x;
     p->y = y;
-
+    
     return p;
 }
 
-static void delete_point(point_t* p)
+// The hash function provided for the point type.
+static hash_t hash_point(void* p)
 {
-    free(p);
+    point_t* as_point = (point_t*)p;
+    return as_point->x;
+}
+
+// The delete function provided for the point type.
+static void delete_point(void* p)
+{
+    point_t* as_point = (point_t*)p;
+    free(as_point);
+}
+
+// The comparison function provided for the key type (string).
+static bool compare_keys(void* p1, void* p2)
+{
+    char* as_str1 = (char*)p1;
+    char* as_str2 = (char*)p2;
+    return 0 == strcmp(as_str1, as_str2);
 }
 
 // ----------------------------------------------------------------------------
 // Test Cases
 
-START_TEST(test_stack_new)
+START_TEST(test_hashmap_new)
 {
-    // new stack construction should succeed
-    stack_t* s = stack_new();
-    ck_assert_msg(s != NULL, "stack_new() returned NULL");
+    hashmap_t* map1 = hashmap_new(NULL, NULL, NULL);
+    ck_assert_msg(NULL == map1, "hashmap_new() returned non-NULL on invalid input");
 
-    // new stack should be empty
-    const size_t count = stack_count(s);
-    ck_assert_msg(count == 0, "newly constructed stack nonempty");
+    hashmap_t* map2 = hashmap_new(hash_point, compare_keys, delete_point);
+    ck_assert_msg(map2 != NULL, "hashmap_new() returned NULL");
 
-    // destruction of stack should succeed because it is empty
-    const bool success = stack_delete(s);
-    ck_assert_msg(success, "stack_delete() on empty stack failed");
+    hashmap_delete(map2);
 }
 END_TEST
 
-START_TEST(test_stack_delete)
+START_TEST(test_hashmap_insert)
 {
-    stack_t* s = stack_new();
-    ck_assert_msg(s != NULL, "stack_new() returned NULL");
+    hashmap_t* map = hashmap_new(hash_point, compare_keys, delete_point);
+    ck_assert_msg(map != NULL, "hashmap_new() returned NULL");
 
-    point_t* p = make_point(1.0f, 2.0f);
-    const bool pushed1 = stack_push(s, p);
-    ck_assert_msg(pushed1, "stack_push() failed");
+    ck_assert_msg(hashmap_count(map) == 0, "hashmap_count() returned incorrect count");
 
-    // attempt to delete stack should fail because stack nonempty
-    const bool deleted1 = stack_delete(s);
-    ck_assert_msg(!deleted1, "stack_delete() succeeded on nonempty stack");
+    void* out1 = NULL;
+    void* out2 = NULL;
+    void* out3 = NULL;
 
-    // remove the pushed item
-    p = stack_pop(s);
-    ck_assert_msg(p != NULL, "stack_pop() failed to return pushed item");
+    point_t* p1 = make_point(1, 1);
+    point_t* p2 = make_point(2, 2);
+    point_t* p3 = make_point(3, 3);
 
-    // check the item's contents
-    ck_assert(p->x == 1.0f);
-    ck_assert(p->y ==2.0f);
-    delete_point(p);
+    // first insertion, should succeed and out1 should be NULL
+    const bool i1 = hashmap_insert(map, "one", p1, &out1);
+    ck_assert_msg(i1, "hashmap_insert() returned false");
+    ck_assert_msg(NULL == out1, "hashmap_insert() spuriously set out");
 
-    // now delete should succeed
-    const bool deleted2 = stack_delete(s);
-    ck_assert_msg(deleted2, "stack_delete() on empty stack failed");
+    ck_assert_msg(hashmap_count(map) == 1, "hashmap_count() returned incorrect count");
+
+    // second insertion, same story as first
+    const bool i2 = hashmap_insert(map, "two", p2, &out2);
+    ck_assert_msg(i2, "hashmap_insert() returned false");
+    ck_assert_msg(NULL == out2, "hashmap_insert() spuriously set out");
+
+    ck_assert_msg(hashmap_count(map) == 2, "hashmap_count() returned incorrect count");
+
+    // third insertion we insert with duplicate key
+    // insertion should succeed and out should be set to p1
+    const bool i3 = hashmap_insert(map, "one", p3, &out3);
+    ck_assert_msg(i3, "hashmap_insert() returned false");
+    ck_assert_msg(out3 != NULL, "hashmap_insert() did not set out to non-NULL");
+
+    ck_assert_msg(hashmap_count(map) == 2, "hashmap_count() returned incorrect count");
+
+    point_t* ret = (point_t*)out3;
+    ck_assert(ret->x == 3);
+    ck_assert(ret->y == 3);
+    delete_point(ret);
+
+    hashmap_delete(map);
 }
 END_TEST
 
-START_TEST(test_stack_push_pop)
+START_TEST(test_hashmap_remove)
 {
-    const size_t N_PUSHED = 5;
-    
-    stack_t* s = stack_new();
-    ck_assert_msg(s != NULL, "stack_new() returned NULL");
+    hashmap_t* map = hashmap_new(hash_point, compare_keys, delete_point);
+    ck_assert_msg(map != NULL, "hashmap_new() returned NULL");
 
-    for (size_t i = 0; i < N_PUSHED; ++i)
-    {   
-        float coordinates = i*1.0f;
-        point_t* p = make_point(coordinates, coordinates);
-        const bool pushed = stack_push(s, p);
-        ck_assert_msg(pushed, "stack_push() failed");
-    }
+    ck_assert_msg(hashmap_count(map) == 0, "hashmap_count() returned incorrect count");
 
-    for (size_t i = 0; i < N_PUSHED; ++i)
-    {
-        point_t* p = stack_pop(s);
-        ck_assert_msg(p != NULL, "stack_pop() on nonempty stack returned NULL");
+    void* out1 = NULL;
+    void* out2 = NULL;
+    void* out3 = NULL;
 
-        // invert order of expected (last in, first out)
-        const float expected = (N_PUSHED - 1 - i)*1.0f;
+    point_t* p1 = make_point(1, 1);
+    point_t* p2 = make_point(2, 2);
+    point_t* p3 = make_point(3, 3);
 
-        float x = p->x;
-        float y = p->y;
+    ck_assert_msg(hashmap_insert(map, "one", p1, &out1), "hashmap_insert() failed");
+    ck_assert_msg(hashmap_insert(map, "two", p2, &out2), "hashmap_insert() failed");
+    ck_assert_msg(hashmap_insert(map, "six", p3, &out3), "hashmap_insert() failed");
 
-        ck_assert_msg(x == expected, "stack_pop() returned unexpected data");
-        ck_assert_msg(y == expected, "stack_pop() returned unexpected data");
-        delete_point(p);
-    }
+    ck_assert(NULL == out1);
+    ck_assert(NULL == out2);
+    ck_assert(NULL == out3);
 
-    const size_t count = stack_count(s);
-    ck_assert_msg(count == 0, "stack_count() returned nonzero for expected empty stack");
+    ck_assert_msg(hashmap_count(map) == 3, "hashmap_count() returned incorrect count");
 
-    const bool deleted = stack_delete(s);
-    ck_assert_msg(deleted, "stack_delete() on empty stack failed");
-}
-END_TEST
+    ck_assert_msg(hashmap_remove(map, "one"), "hashmap_remove() failed on key present in map");
+    ck_assert_msg(hashmap_remove(map, "two"), "hashmap_remove() failed on key present in map");
 
-START_TEST(test_stack_peek)
-{
-    stack_t* s = stack_new();
-    ck_assert_msg(s != NULL, "stack_new() returned NULL");
+    ck_assert_msg(hashmap_count(map) == 1, "hashmap_count() returned incorrect count");
 
-    point_t* p = make_point(1.0f, 2.0f);
-    const bool pushed = stack_push(s, p);
-    ck_assert_msg(pushed, "stack_push() failed");
+    ck_assert_msg(!hashmap_remove(map, "eleven"), "hashmap_remove() succeeded on key not present in map");
 
-    // peek at the top of the stack
-    p = stack_peek(s);
-    ck_assert_msg(p != NULL, "stack_peek() returned NULL on nonempty stack");
+    point_t* ret = hashmap_find(map, "six");
 
-    // check the peeked content
-    ck_assert(p->x == 1.0f);
-    ck_assert(p->y == 2.0f);
+    ck_assert_msg(ret != NULL, "hashmap_find() returned NULL for key present in map");
 
-    // non remove the item
-    p = stack_pop(s);
-    ck_assert_msg(p != NULL, "stack_pop() returned NULL on nonempty stack");
+    ck_assert(ret->x == 3);
+    ck_assert(ret->y == 3);
 
-    // check the removed content
-    ck_assert(p->x == 1.0f);
-    ck_assert(p->y == 2.0f);
-    delete_point(p);
-
-    // delete the stack
-    const bool deleted = stack_delete(s);
-    ck_assert_msg(deleted, "stack_delete() failed on empty stack");
+    hashmap_delete(map);
 }
 END_TEST
 
 // ----------------------------------------------------------------------------
 // Infrastructure
  
-Suite* stack_suite(void)
+Suite* hashmap_suite(void)
 {
-    Suite* s = suite_create("stack");
-    TCase* tc_core = tcase_create("stack-core");
+    Suite* s = suite_create("hashmap");
+    TCase* tc_core = tcase_create("hashmap-core");
     
-    tcase_add_test(tc_core, test_stack_new);
-    tcase_add_test(tc_core, test_stack_delete);
-    tcase_add_test(tc_core, test_stack_push_pop);
-    tcase_add_test(tc_core, test_stack_peek);
+    tcase_add_test(tc_core, test_hashmap_new);
+    tcase_add_test(tc_core, test_hashmap_insert);
+    tcase_add_test(tc_core, test_hashmap_remove);
     
     suite_add_tcase(s, tc_core);
     
@@ -167,7 +170,7 @@ Suite* stack_suite(void)
 
 int main(void)
 {
-    Suite* suite = stack_suite();
+    Suite* suite = hashmap_suite();
     SRunner* runner = srunner_create(suite);
 
     srunner_run_all(runner, CK_NORMAL);    
