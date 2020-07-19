@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "hashmap.h"
-#include "../intrusive-list/intrusive_list.h"
+#include "intrusive_list.h"
 
 // The initial number of buckets in the internal table.
 static const size_t INIT_N_BUCKETS = 16;
@@ -359,16 +359,7 @@ static void remove_from_bucket(
     bucket_t* bucket_head, 
     bucket_item_t* item)
 {
-    // NOTE: this is hacky, in a perfect world
-    // the intrusive_list API would support a remove
-    // operation that would handle this low-level
-    // linked-list manipulation, but I don't want to
-    // alter the API now to suit this use case
-
-    list_entry_t* entry = &item->entry;
-
-    entry->flink->blink = entry->blink;
-    entry->blink->flink = entry->flink;
+    list_remove_entry(bucket_head, &item->entry);
 }
 
 // determine if a table resize is required

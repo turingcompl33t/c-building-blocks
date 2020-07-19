@@ -94,7 +94,13 @@ list_entry_t* list_pop_back(list_entry_t* head)
 
 void list_remove_entry(list_entry_t* head, list_entry_t* entry)
 {
-    return;
+    if (NULL == head || entry == head)
+    {
+        return;
+    }
+
+    entry->flink->blink = entry->blink;
+    entry->blink->flink = entry->flink;
 }
 
 size_t list_count(list_entry_t* head)
