@@ -24,7 +24,7 @@ bool tree_insert(
 	return false;
 }
 
-void* tree_remove(binary_tree_t* tree, void* key)
+bool tree_remove(binary_tree_t* tree, void* key)
 {
 	return NULL;
 }

@@ -141,7 +141,7 @@ bool tree_insert(
 // Returns:
 //  `true` on successful removal of the value associated with `key`
 //  `false` otherwise
-void* tree_remove(binary_tree_t* tree, void* key);
+bool tree_remove(binary_tree_t* tree, void* key);
 
 // tree_find()
 //
