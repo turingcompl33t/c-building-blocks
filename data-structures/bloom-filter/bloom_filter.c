@@ -44,7 +44,7 @@ bloom_filter_t* filter_new(const size_t n_bits, const size_t n_hashes)
 	}
 
 	filter->bitvector  = vector;
-	filter->n_elements = 0;
+	filter->n_items    = 0;
 	filter->n_hashes   = n_hashes;
 	filter->n_bits     = n_bits;
 	filter->n_setbits  = 0;
@@ -93,7 +93,7 @@ void filter_insert(bloom_filter_t* filter, byte_t* data, size_t len)
 		}
 	}
 
-	filter->n_elements++; 
+	filter->n_items++; 
 }
 
 filter_test_t filter_test(bloom_filter_t* filter, byte_t* data, size_t len)
@@ -140,7 +140,7 @@ void filter_clear(bloom_filter_t* filter)
 	}
 
 	// reset running counts 
-	filter->n_elements = 0;
+	filter->n_items    = 0;
 	filter->n_setbits  = 0;
 }
 
@@ -154,7 +154,7 @@ filter_stats_t filter_stats(bloom_filter_t* filter)
 
 	if (filter != NULL)
 	{
-		stats.n_items   = filter->n_elements;
+		stats.n_items   = filter->n_items;
 		stats.n_bits    = filter->n_bits;
 		stats.n_setbits = filter->n_setbits;
 	}
