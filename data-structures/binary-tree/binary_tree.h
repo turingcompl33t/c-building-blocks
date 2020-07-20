@@ -32,7 +32,7 @@
 // 
 //	- Parent: the node appearing "above" it in the tree
 //	- Left Child: one node appearing "below" it in the tree
-//  - Right Child: one node appearing "below" it in the tree
+// 	- Right Child: one node appearing "below" it in the tree
 //
 // The "binary" part of the binary tree's name comes from the
 // fact that it only maintains two child relationships. One 
@@ -100,7 +100,7 @@ typedef void (*deleter_f)(void*);
 // The signature for the user-provided iterator function.
 //
 // In tree_for_each(), this function is invoked on each
-// key / pair stored in the tree in a pre-order traversal.
+// key / pair stored in the tree in an inorder traversal.
 typedef void (iterator_f)(void*, void*);
 
 struct treenode;
@@ -232,7 +232,7 @@ size_t tree_count(binary_tree_t* tree);
 
 // tree_for_each()
 //
-// Walk the tree in pre-order traversal and invoke
+// Walk the tree in inorder traversal and invoke
 // `iter` on each key / value pair.
 //
 // Arguments:
