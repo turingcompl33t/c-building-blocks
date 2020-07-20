@@ -40,8 +40,8 @@ typedef struct bloom_filter {
 	// The number of hash functions used to implement filter. 
 	size_t n_hashes;
 
-	// The number of elements inserted into filter.
-	size_t n_elements;
+	// The number of items inserted into filter.
+	size_t n_items;
 
 	// The number of bits set in the filter
 	size_t n_setbits;
