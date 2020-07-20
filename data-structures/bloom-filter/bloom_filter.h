@@ -8,6 +8,58 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// Background:
+//
+// From the excellent "Bloom Filters By Example" article:
+// (https://llimllib.github.io/bloomfilter-tutorial/)
+//
+// "A bloom filter is a data structure designed to tell you,
+// rapidly and memory-efficiently, whether an element is present
+// in a set.
+//
+// The price paid for this efficiency is that a Bloom filter
+// is a probabilistic data structure: it tells us that the 
+// element either _definitely is not_ in the set or _may be_ 
+// in the set."
+//
+// The way that a bloom filter accomplishes its efficiency
+// is by not stored the inserted set elements themselves,
+// but rather computing hashes of the inserted elements and
+// using these hashes to set and test bits in an internal bit
+// vector. 
+//
+// An insertion of an item into a bloom filter proceeds (roughly) as follows:
+//
+// For each hash function utilized by the filter:
+//	Hash the inserted item
+//	Determine the bit to set in the filter based on this hash 
+//	Set this bit in the filter
+//
+// The test for presence of an item into a bloom filter proceeds (roughly) as follows:
+//
+// For each hash function utilized by the filter:
+// 	Hash the inserted item
+//	Determine the bit to test in the filter based on this hash
+//	Test this bit
+//		If the bit is set, continue to the next has
+//		If the bit is not set, the item is not in the filter, return the item is not present
+// All bits have been tested, return the item is present 
+// 	
+// The probabilistic nature of the Bloom filter enters the picture
+// because the limited size of the bit vector implies that we will
+// have collisions - instances in which two distinct items produce a
+// hash that encodes the same bit in the internal bit vector. One way
+// in which Bloom filter implementations decrease the probability of
+// these collisions is by increasing the number of hash functions used
+// by the filter - the greater the number of hash functions, the lower
+// the probability of receiving a false poisitive result from a test.
+//
+// This implementation uses the Murmur3 hash function to perform the
+// hashing within the filter. The Murmur3 library is already included
+// (as source) in this directory and will be linked to the driver
+// program so that your filter implementation can make use of it. See the
+// header file (murmur3.h) for more details on its use.
+
 // The representation of bytes-like objects.
 typedef uint8_t byte_t;
 
