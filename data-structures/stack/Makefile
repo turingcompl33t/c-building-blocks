@@ -5,7 +5,6 @@
 CC = gcc
 CFLAGS = -Wall -Werror -std=c11 -ggdb
 
-#CHECK_LIBS = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 CHECK_FLAGS = $(shell pkg-config --cflags --libs check)
 
 LIB = stack
