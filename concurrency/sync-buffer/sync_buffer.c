@@ -15,7 +15,7 @@ bool sync_buffer_delete(sync_buffer_t* buffer)
 
 bool sync_buffer_put(sync_buffer_t* buffer, void* data)
 {
-    return;
+    return false;
 }
 
 bool sync_buffer_try_put(sync_buffer_t* buffer, void* data)
