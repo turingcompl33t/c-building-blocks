@@ -17,7 +17,7 @@ typedef struct stack
 
     // Pointer to the current top of the stack.
     struct stack_item* top;
-} stack_t;
+} lstack_t;
 
 // stack_new()
 //
@@ -26,7 +26,7 @@ typedef struct stack
 // Returns:
 //  A pointer to the newly constructed stack on success.
 //  Null on failure.
-stack_t* stack_new(void);
+lstack_t* stack_new(void);
 
 // stack_delete()
 //
@@ -50,7 +50,7 @@ stack_t* stack_new(void);
 // Returns:
 //  `true` on successful destruction of the stack
 //  `false` in the event the stack is nonempty
-bool stack_delete(stack_t* stack);
+bool stack_delete(lstack_t* stack);
 
 // stack_push()
 // 
@@ -63,7 +63,7 @@ bool stack_delete(stack_t* stack);
 // Returns:
 //  `true` on successful push
 //  `false` otherwise
-bool stack_push(stack_t* stack, void* data);
+bool stack_push(lstack_t* stack, void* data);
 
 // stack_pop()
 //
@@ -77,7 +77,7 @@ bool stack_push(stack_t* stack, void* data);
 // Returns:
 //  A pointer to the user data popped from the stack on success.
 //  NULL on failure (invalid stack, empty stack)
-void* stack_pop(stack_t* stack);
+void* stack_pop(lstack_t* stack);
 
 // stack_peek()
 //
@@ -91,7 +91,7 @@ void* stack_pop(stack_t* stack);
 // Returns:
 //  A pointer to the peeked data on success
 //  NULL on failure (invalid stack, empty stack)
-void* stack_peek(stack_t* stack);
+void* stack_peek(lstack_t* stack);
 
 // stack_count()
 //
@@ -102,6 +102,6 @@ void* stack_peek(stack_t* stack);
 //
 // Returns:
 //  The current count of items on the stack.
-size_t stack_count(stack_t* stack);
+size_t stack_count(lstack_t* stack);
 
 #endif // STACK_H

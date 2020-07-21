@@ -13,32 +13,32 @@ typedef struct stack_item
     void* data;
 } stack_item_t;
 
-stack_t* stack_new(void)
+lstack_t* stack_new(void)
 {
     return NULL;
 }
 
-bool stack_delete(stack_t* stack)
+bool stack_delete(lstack_t* stack)
 {
     return false;
 }
 
-bool stack_push(stack_t* stack, void* data)
+bool stack_push(lstack_t* stack, void* data)
 {
     return false;
 }
 
-void* stack_pop(stack_t* stack)
+void* stack_pop(lstack_t* stack)
 {
     return NULL;
 }
 
-void* stack_peek(stack_t* stack)
+void* stack_peek(lstack_t* stack)
 {
     return NULL;
 }
 
-size_t stack_count(stack_t* stack)
+size_t stack_count(lstack_t* stack)
 {
     return 0;
 }
