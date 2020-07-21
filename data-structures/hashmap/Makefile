@@ -3,9 +3,9 @@
 # Makefile for hashmap data structure.
 
 CC = gcc
-CFLAGS = -Wall -Werror -pedantic -std=c11 -ggdb
+CFLAGS = -Wall -Werror -std=c11 -ggdb
 
-CHECK_LIBS = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
+CHECK_FLAGS = $(shell pkg-config --cflags --libs check)
 
 OBJS = hashmap.o intrusive_list.o
 
@@ -15,7 +15,7 @@ hashmap.o: hashmap.c hashmap.h
 intrusive_list.o: intrusive_list.c intrusive_list.h
 
 driver: lib
-	$(CC) $(CFLAGS) check.c $(OBJS) -o check $(CHECK_LIBS)
+	$(CC) $(CFLAGS) check.c $(OBJS) -o check $(CHECK_FLAGS)
 
 check: driver
 	./check
