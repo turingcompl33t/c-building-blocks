@@ -3,9 +3,9 @@
 # Makefile for bloom-filter data structure.
 
 CC = gcc
-CFLAGS = -Wall -Werror -pedantic -std=c11 -ggdb
+CFLAGS = -Wall -Werror -std=c11 -ggdb
 
-CHECK_LIBS = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
+CHECK_FLAGS = $(shell pkg-config --cflags --libs check)
 
 LIB = bloom_filter
 
@@ -15,7 +15,7 @@ $(LIB).o: $(LIB).c $(LIB).h
 murmur3.o: murmur3.c murmur3.h
 
 driver: lib
-	$(CC) $(CFLAGS) check.c $(LIB).o murmur3.o -o check $(CHECK_LIBS)
+	$(CC) $(CFLAGS) check.c $(LIB).o murmur3.o -o check $(CHECK_FLAGS)
 
 check: driver
 	./check

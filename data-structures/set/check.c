@@ -1,6 +1,9 @@
 // check.c
 // Driver program for set data structure tests.
 
+// attribute gnu_printf
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+
 #include <check.h>
 #include <stdlib.h>
 

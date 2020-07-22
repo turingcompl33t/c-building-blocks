@@ -1,6 +1,9 @@
 // check.c
 // Driver program for bubble sort algorithm tests.
 
+// attribute gnu_printf
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+
 #include <time.h>
 #include <check.h>
 #include <stdlib.h>

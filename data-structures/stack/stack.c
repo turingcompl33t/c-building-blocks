@@ -26,9 +26,9 @@ static stack_item_t* new_item(void* data);
 // ----------------------------------------------------------------------------
 // Exported
 
-stack_t* stack_new(void)
+lstack_t* stack_new(void)
 {
-    stack_t* stack = malloc(sizeof(stack_t));
+    lstack_t* stack = malloc(sizeof(lstack_t));
     if (NULL == stack)
     {
         return NULL;
@@ -40,7 +40,7 @@ stack_t* stack_new(void)
     return stack;
 }
 
-bool stack_delete(stack_t* stack)
+bool stack_delete(lstack_t* stack)
 {
     if (NULL == stack || stack->count > 0)
     {
@@ -54,7 +54,7 @@ bool stack_delete(stack_t* stack)
     return true;
 }
 
-bool stack_push(stack_t* stack, void* data)
+bool stack_push(lstack_t* stack, void* data)
 {
     if (NULL == stack)
     {
@@ -75,7 +75,7 @@ bool stack_push(stack_t* stack, void* data)
     return true;
 }
 
-void* stack_pop(stack_t* stack)
+void* stack_pop(lstack_t* stack)
 {
     if (NULL == stack || stack->count == 0)
     {
@@ -94,7 +94,7 @@ void* stack_pop(stack_t* stack)
     return data;
 }
 
-void* stack_peek(stack_t* stack)
+void* stack_peek(lstack_t* stack)
 {
     if (NULL == stack || stack->count == 0)
     {
@@ -104,7 +104,7 @@ void* stack_peek(stack_t* stack)
     return stack->top->data;
 }
 
-size_t stack_count(stack_t* stack)
+size_t stack_count(lstack_t* stack)
 {
     return (NULL == stack) ? 0 : stack->count; 
 }

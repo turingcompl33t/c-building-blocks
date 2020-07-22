@@ -1,6 +1,9 @@
 // check.c
 // Driver program for stack data structure tests.
 
+// attribute gnu_printf
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+
 #include <check.h>
 #include <stdlib.h>
 
@@ -35,7 +38,7 @@ static void delete_point(point_t* p)
 START_TEST(test_stack_new)
 {
     // new stack construction should succeed
-    stack_t* s = stack_new();
+    lstack_t* s = stack_new();
     ck_assert_msg(s != NULL, "stack_new() returned NULL");
 
     // new stack should be empty
@@ -50,7 +53,7 @@ END_TEST
 
 START_TEST(test_stack_delete)
 {
-    stack_t* s = stack_new();
+    lstack_t* s = stack_new();
     ck_assert_msg(s != NULL, "stack_new() returned NULL");
 
     point_t* p = make_point(1.0f, 2.0f);
@@ -80,7 +83,7 @@ START_TEST(test_stack_push_pop)
 {
     const size_t N_PUSHED = 5;
     
-    stack_t* s = stack_new();
+    lstack_t* s = stack_new();
     ck_assert_msg(s != NULL, "stack_new() returned NULL");
 
     for (size_t i = 0; i < N_PUSHED; ++i)
@@ -117,7 +120,7 @@ END_TEST
 
 START_TEST(test_stack_peek)
 {
-    stack_t* s = stack_new();
+    lstack_t* s = stack_new();
     ck_assert_msg(s != NULL, "stack_new() returned NULL");
 
     point_t* p = make_point(1.0f, 2.0f);
