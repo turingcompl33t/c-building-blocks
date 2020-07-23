@@ -8,10 +8,7 @@
 
 // The top-level ccontext for the simulation.
 // What data might need to be persisted here?
-typedef struct conway_ctx
-{
-    // TODO: fill this in!
-} conway_ctx_t;
+typedef struct conway_ctx conway_ctx_t;
 
 // conway_new()
 //
