@@ -16,7 +16,7 @@ $(LIB).o: $(LIB).c $(LIB).h
 driver: lib
 	$(CC) $(CFLAGS) driver.c $(LIB).o -o driver $(CHECK_FLAGS)
 
-check: driver
+run: driver
 	./driver 10 10
 
 clean:
