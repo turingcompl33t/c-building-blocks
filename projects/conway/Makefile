@@ -17,7 +17,7 @@ driver: lib
 	$(CC) $(CFLAGS) driver.c $(LIB).o -o driver $(CHECK_FLAGS)
 
 check: driver
-	./check
+	./driver 10 10
 
 clean:
 	rm -f *~
