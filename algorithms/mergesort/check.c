@@ -11,7 +11,6 @@
 #include "mergesort.h"
 
 #define N_ITEMS 100
-#define N_ITERS 25
 
 // ----------------------------------------------------------------------------
 // Definitions for Testing
@@ -65,24 +64,18 @@ START_TEST(test_mergesort)
     int dst[N_ITEMS];
 
     // test ascending sorts
-    for (size_t i = 0; i < N_ITERS; ++i)
-    {
-        random_array(src, N_ITEMS, 0, 1000);
-        random_array(dst, N_ITEMS, 0, 1000);
+    random_array(src, N_ITEMS, 0, 1000);
+    random_array(dst, N_ITEMS, 0, 1000);
 
-        mergesort(src, dst, 0, N_ITEMS - 1, less_equal);
-        ck_assert_msg(is_sorted(dst, 0, N_ITEMS - 1, less_equal));
-    }
+    mergesort(src, dst, 0, N_ITEMS - 1, less_equal);
+    ck_assert_msg(is_sorted(dst, 0, N_ITEMS - 1, less_equal));
 
     // test descending sorts
-    for (size_t i = 0; i < N_ITERS; ++i)
-    {
-        random_array(src, N_ITEMS, 0, 1000);
-        random_array(dst, N_ITEMS, 0, 1000);
-    
-        mergesort(src, dst, 0, N_ITEMS - 1, greater_equal);
-        ck_assert_msg(is_sorted(dst, 0, N_ITEMS - 1, less_equal));
-    }
+    random_array(src, N_ITEMS, 0, 1000);
+    random_array(dst, N_ITEMS, 0, 1000);
+
+    mergesort(src, dst, 0, N_ITEMS - 1, greater_equal);
+    ck_assert_msg(is_sorted(dst, 0, N_ITEMS - 1, greater_equal));
 }
 END_TEST
 
