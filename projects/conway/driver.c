@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 {
     if (argc < 3)
     {
-        printf("[-] Error: invalid arguments");
+        printf("[-] Error: invalid arguments\n");
         printf("[-] Usage: %s <ROWS> <COLUMNS>\n", argv[0]);
         return EXIT_FAILURE;
     }
