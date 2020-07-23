@@ -51,11 +51,16 @@ int main(int argc, char* argv[])
     conway_ctx_t* ctx = conway_new(args.n_rows, args.n_cols);
 
     // set the cells to construct a glider
-    conway_set_cell(ctx, 2, 0);
-    conway_set_cell(ctx, 2, 1);
+    // conway_set_cell(ctx, 4, 4);
+    // conway_set_cell(ctx, 2, 1);
+    // conway_set_cell(ctx, 2, 2);
+    // conway_set_cell(ctx, 1, 2);
+    // conway_set_cell(ctx, 0, 1);
+
+    // set the cells to construct a simple oscillator
     conway_set_cell(ctx, 2, 2);
-    conway_set_cell(ctx, 1, 2);
-    conway_set_cell(ctx, 0, 1);
+    conway_set_cell(ctx, 2, 1);
+    conway_set_cell(ctx, 2, 3);
 
     // print the initial state of the grid
     conway_print_grid(ctx);

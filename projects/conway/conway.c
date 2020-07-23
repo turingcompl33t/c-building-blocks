@@ -108,7 +108,7 @@ void conway_delete(conway_ctx_t* ctx)
     free(ctx);
 }
 
-void conway_set_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx)
+void conway_set_cell(conway_ctx_t* ctx, size_t x, size_t y)
 {
     if (NULL == ctx)
     {
@@ -125,7 +125,7 @@ void conway_set_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx)
     set_cell(grid, ctx->n_cols, col_idx, row_idx);
 }
 
-void conway_unset_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx)
+void conway_unset_cell(conway_ctx_t* ctx, size_t x, size_t y)
 {
     if (NULL == ctx)
     {

@@ -32,7 +32,9 @@ void conway_delete(conway_ctx_t* ctx);
 // Arguments:
 // ctx - pointer to a context structure created by 
 //       previous call to conway_new()
-void conway_set_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx);
+// x   - x coordinate of the cell to set (indexed from 0)
+// y   - y coordinate of the cell to set (indexed from 0)
+void conway_set_cell(conway_ctx_t* ctx, size_t x, size_t y);
 
 // conway_unset_cell()
 //
@@ -42,7 +44,9 @@ void conway_set_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx);
 // Arguments:
 // ctx - pointer to a context structure created by 
 //       previous call to conway_new()
-void conway_unset_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx);
+// x   - x coordinate of the cell to unset (indexed from 0)
+// y   - y coordinate of the cell to unset (indexed from 0)
+void conway_unset_cell(conway_ctx_t* ctx, size_t x, size_t y);
 
 // conway_simulate_n()
 //
