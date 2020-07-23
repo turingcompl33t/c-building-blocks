@@ -214,6 +214,11 @@ static void simulate_tick(conway_ctx_t* ctx)
                     // but has exactly 3 live neighbors, so it becomes alive
                     set_cell(dst_grid, n_cols, j, i);
                 }
+                else 
+                {
+                    // otherwise, make sure it stays dead (artifact of mutliple grids)
+                    unset_cell(dst_grid, n_cols, j, i);
+                }
             } 
             else 
             {
