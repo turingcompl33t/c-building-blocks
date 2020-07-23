@@ -190,7 +190,7 @@ bool tree_insert(
 // associated with `key` using the user-provided 
 // delete function and removes the key from the tree.
 //
-// NOTE: The semantics of this map are such that it
+// NOTE: The semantics of this tree are such that it
 // will never try to destroy a key type that it maintains.
 // This is to account for the most common cases in which
 // types such as integral types or strings (static) are
