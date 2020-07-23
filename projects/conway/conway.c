@@ -116,13 +116,13 @@ void conway_set_cell(conway_ctx_t* ctx, size_t x, size_t y)
     }
 
     // out of range
-    if (row_idx >= ctx->n_rows || col_idx >= ctx->n_cols)
+    if (x >= ctx->n_cols || y >= ctx->n_rows)
     {
         return;
     }
 
     grid_t grid = ctx->grids[ctx->grid_idx];
-    set_cell(grid, ctx->n_cols, col_idx, row_idx);
+    set_cell(grid, ctx->n_cols, x, y);
 }
 
 void conway_unset_cell(conway_ctx_t* ctx, size_t x, size_t y)
@@ -133,13 +133,13 @@ void conway_unset_cell(conway_ctx_t* ctx, size_t x, size_t y)
     }
 
     // out of range
-    if (row_idx >= ctx->n_rows || col_idx >= ctx->n_cols)
+    if (x >= ctx->n_cols || y >= ctx->n_rows)
     {
         return;
     }
 
     grid_t grid = ctx->grids[ctx->grid_idx];
-    unset_cell(grid, ctx->n_cols, col_idx, row_idx);
+    unset_cell(grid, ctx->n_cols, x, y);
 }
 
 void conway_simulate_n(conway_ctx_t* ctx, size_t n)
