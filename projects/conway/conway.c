@@ -13,12 +13,12 @@ void conway_delete(conway_ctx_t* ctx)
     return;
 }
 
-void conway_set_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx)
+void conway_set_cell(conway_ctx_t* ctx, size_t x, size_t y)
 {
     return;
 }
 
-void conway_unset_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx)
+void conway_unset_cell(conway_ctx_t* ctx, size_t x, size_t y)
 {
     return;
 }
