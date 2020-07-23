@@ -3,304 +3,293 @@
 
 #include "conway.h"
 
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+// ----------------------------------------------------------------------------
+// Internal Declarations
+
+static const size_t N_ROWS_MIN = 5;
+static const size_t N_COLS_MIN = 5;
+
+// Arbitrary choice for the representation of a single cell.
+// Always either 0 = DEAD, 1 = ALIVE.
+typedef uint_fast8_t cell_t;
+
+// The grid is represented as a flat, 2-dimensional array of cells.
+typedef uint_fast8_t* grid_t;
+
+struct conway_ctx
+{
+    // The dimensions of the grid.
+    size_t n_rows;
+    size_t n_cols;
+
+    // The selector for the current grid. 0 or 1.
+    size_t grid_idx;
+
+    // The two grids that represent the state of simulation.
+    // We switch between the two grids in each iteration.
+    grid_t grids[2];
+
+    // The number of steps simulated.
+    size_t n_steps;
+};
+
+static void simulate_tick(conway_ctx_t* ctx);
+static size_t compute_neighbors(
+    conway_ctx_t* ctx, 
+    size_t x, 
+    size_t y);
+
+static cell_t get_cell(grid_t grid, size_t n_cols, size_t x, size_t y);
+static void set_cell(grid_t grid, size_t n_cols, size_t x, size_t y);
+static void unset_cell(grid_t grid, size_t n_cols, size_t x, size_t y);
+
+// ----------------------------------------------------------------------------
+// Exported
+
 conway_ctx_t* conway_new(size_t n_rows, size_t n_cols)
 {
-    return NULL;
+    if (n_rows < N_ROWS_MIN || n_cols < N_COLS_MIN)
+    {
+        return NULL;
+    }
+
+    conway_ctx_t* ctx = malloc(sizeof(conway_ctx_t));
+    if (NULL == ctx)
+    {
+        return NULL;
+    }
+
+    const size_t grid_size = n_rows*n_cols;
+
+    grid_t grid_0 = calloc(grid_size, sizeof(cell_t));
+    grid_t grid_1 = calloc(grid_size, sizeof(cell_t));
+    if (NULL == grid_0 || NULL == grid_1)
+    {
+        if (NULL == grid_0) free(grid_0);
+        if (NULL == grid_1) free(grid_1);
+
+        free(ctx);
+        return NULL;
+    }
+
+    ctx->grids[0] = grid_0;
+    ctx->grids[1] = grid_1;
+
+    ctx->n_rows   = n_rows;
+    ctx->n_cols   = n_cols;
+    ctx->grid_idx = 0;
+    ctx->n_steps  = 0;
+
+    return ctx;
 }
 
 void conway_delete(conway_ctx_t* ctx)
 {
-    return;
+    if (NULL == ctx)
+    {
+        return;
+    }
+
+    if (ctx->grids[0] != NULL)
+    {
+        free(ctx->grids[0]);
+    }
+
+    if (ctx->grids[1] != NULL)
+    {
+        free(ctx->grids[0]);
+    }
+
+    free(ctx);
 }
 
 void conway_set_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx)
 {
-    return;
+    if (NULL == ctx)
+    {
+        return;
+    }
+
+    // out of range
+    if (row_idx >= ctx->n_rows || col_idx >= ctx->n_cols)
+    {
+        return;
+    }
+
+    grid_t grid = ctx->grids[ctx->grid_idx];
+    set_cell(grid, ctx->n_cols, col_idx, row_idx);
 }
 
 void conway_unset_cell(conway_ctx_t* ctx, size_t row_idx, size_t col_idx)
 {
-    return;
+    if (NULL == ctx)
+    {
+        return;
+    }
+
+    // out of range
+    if (row_idx >= ctx->n_rows || col_idx >= ctx->n_cols)
+    {
+        return;
+    }
+
+    grid_t grid = ctx->grids[ctx->grid_idx];
+    unset_cell(grid, ctx->n_cols, col_idx, row_idx);
 }
 
 void conway_simulate_n(conway_ctx_t* ctx, size_t n)
 {
-    return;
+    if (NULL == ctx)
+    {
+        return;
+    }
+
+    for (size_t tick = 0; tick < n; ++tick)
+    {
+        simulate_tick(ctx);
+    }
 }
 
 void conway_print_grid(conway_ctx_t* ctx)
 {
-    return;
-}
+    // determine the correct grid to print
+    grid_t grid = ctx->grids[ctx->grid_idx];
+    
+    const size_t n_rows = ctx->n_rows;
+    const size_t n_cols = ctx->n_cols;
 
-int board0[HEIGHT][WIDTH];
-int board1[HEIGHT][WIDTH];
-
-void initialize_board();
-
-void step_board(int iter);
-void step_board0();
-void step_board1();
-
-int neighbors_board0(int x, int y);
-int neighbors_board1(int x, int y);
-
-void print_board(int iter);
-void print_board0();
-void print_board1();
-
-int main() {
-  // setup the initial state
-  initialize_board();
-
-  // hardcoded setup (glider)
-  board0[10][9] = 1;
-  board0[10][10] = 1;
-  board0[10][11] = 1;
-  board0[9][11] = 1;
-  board0[8][10] = 1;
-
-  int iter = 0;
-
-  // game loop
-  while (true) {
-    print_board(iter);
-    step_board(iter);
-
-    iter = (iter + 1) % 2;
-
-    sleep(1);
-  }
-
-  return 0;
-}
-
-/*
- * Initialize the board array.
- * Always updates board 0 by default.
- */
-void initialize_board() {
-  for (int i = 0; i < HEIGHT; i++) {
-    for (int j = 0; j < WIDTH; j++) {
-      board0[i][j] = 0;
-    }
-  }
-}
-
-/*
- * Step the board forward a single tick.
- */
-void step_board(int iter) {
-  if (iter == 0) {
-    step_board0();
-  } else {
-    step_board1();
-  }
-}
-
-/*
- * Step forward from board0
- * --> updates into board1
- */
-void step_board0() {
-  // iterate over rows
-  for (int i = 0; i < HEIGHT; i++) {
-    // iterate over columns
-    for (int j = 0; j < WIDTH; j++) {
-      // get the neighbors for this cell
-      int n = neighbors_board0(j, i);
-
-      if (board0[i][j] == 0) {
-        // this cell is currently dead
-        if (n == 3) {
-          // goldilocks --> lives
-          board1[i][j] = 1;
+    for (size_t i = 0; i < n_rows; ++i) 
+    {
+        for (size_t j = 0; j < n_cols; ++j) 
+        {
+            if (0 == get_cell(grid, n_cols, j, i)) 
+            {
+                printf(". ");
+            } 
+            else 
+            {
+                printf("x ");
+            }
         }
-      } else {
-        // this cell is currently alive
-        if (n < 2) {
-          // underpopulation --> dies
-          board1[i][j] = 0;
-        } else if (n == 2 || n == 3) {
-          // goldilocks --> lives
-          board1[i][j] = 1;
-        } else {
-          // overpopulation --> dies
-          board1[i][j] = 0;
+        puts("");    
+    }
+    puts("");
+}
+
+// ----------------------------------------------------------------------------
+// Internal
+
+// Progress the simulation by a single tick.
+static void simulate_tick(conway_ctx_t* ctx)
+{
+    // determine the current grid
+    const size_t src_idx = ctx->grid_idx;
+    const size_t dst_idx = ctx->grid_idx ^ 1;
+
+    grid_t src_grid = ctx->grids[src_idx];
+    grid_t dst_grid = ctx->grids[dst_idx];
+
+    const size_t n_rows = ctx->n_rows;
+    const size_t n_cols = ctx->n_cols;
+
+    // iterate over rows
+    for (size_t i = 0; i < n_rows; ++i) 
+    {
+        // iterate over columns
+        for (size_t j = 0; j < n_cols; ++j) 
+        {
+            // get the neighbors for this cell
+            const size_t n = compute_neighbors(ctx, j, i);
+
+            if (0 == get_cell(src_grid, ctx->n_cols, j, i))
+            {
+                // this cell is currently dead
+                if (3 == n) 
+                {
+                    // but has exactly 3 live neighbors, so it becomes alive
+                    set_cell(dst_grid, n_cols, j, i);
+                }
+            } 
+            else 
+            {
+                // this cell is currently alive
+                if (n < 2) 
+                {
+                    // underpopulation, dies
+                    unset_cell(dst_grid, n_cols, j, i);
+                } 
+                else if (2 == n|| 3 == n) 
+                {
+                    // goldilocks, lives
+                    set_cell(dst_grid, n_cols, j, i);
+                } 
+                else 
+                {
+                    // overpopulation, dies
+                    unset_cell(dst_grid, n_cols, j, i);
+                }
+            }
         }
-      }
     }
-  }
+
+    // update the current grid index
+    ctx->grid_idx = dst_idx;
 }
 
-/*
- * Compute neighbors for given cell, in board0.
- */
-int neighbors_board0(int x, int y) {
-  int up;
-  int down;
-  int left;
-  int right;
+// Compute the count of neighbors for a given cell.
+static size_t compute_neighbors(
+    conway_ctx_t* ctx, 
+    size_t x, 
+    size_t y) 
+{
+    grid_t grid = ctx->grids[ctx->grid_idx];
 
-  if (y >= (HEIGHT - 1)) {
-    down = 0;
-  } else {
-    down = y + 1;
-  }
+    const size_t max_x = ctx->n_cols;
+    const size_t max_y = ctx->n_rows;
 
-  if (y <= 0) {
-    up = HEIGHT - 1;
-  } else {
-    up = y - 1;
-  }
+    // grid is a torus, need to account for wrapping
+    const size_t up    = (y == 0) ? max_y - 1 : y - 1;
+    const size_t down  = (y >= (max_y - 1)) ? 0 : y + 1;
+    const size_t left  = (x == 0) ? max_x - 1 : x - 1;
+    const size_t right = (x >= (max_x - 1)) ? 0 : x + 1;
 
-  if (x >= (WIDTH - 1)) {
-    right = 0;
-  } else {
-    right = x + 1;
-  }
+    const size_t n_cols = ctx->n_cols;
 
-  if (x <= 0) {
-    left = WIDTH - 1;
-  } else {
-    left = x - 1;
-  }
+    size_t n = 0;
+    n += get_cell(grid, n_cols, left, up);
+    n += get_cell(grid, n_cols, x, up);
+    n += get_cell(grid, n_cols, right, up);
+    n += get_cell(grid, n_cols, left, y);
+    n += get_cell(grid, n_cols, right, y);
+    n += get_cell(grid, n_cols, left, down);
+    n += get_cell(grid, n_cols, x, down);
+    n += get_cell(grid, n_cols, right, down);
 
-  int n = 0;
-  n += board0[up][left];
-  n += board0[up][x];
-  n += board0[up][right];
-  n += board0[y][left];
-  n += board0[y][right];
-  n += board0[down][left];
-  n += board0[down][x];
-  n += board0[down][right];
-
-  return n;
+    return n;
 }
 
-/*
- * Step forward from board1
- * --> updates into board0
- */
- void step_board1() {
-   // iterate over rows
-   for (int i = 0; i < HEIGHT; i++) {
-     // iterate over columns
-     for (int j = 0; j < WIDTH; j++) {
-       // get the neighbors for this cell
-       int n = neighbors_board1(j, i);
-
-       if (board1[i][j] == 0) {
-         // this cell is currently dead
-         if (n == 3) {
-           // goldilocks --> lives
-           board0[i][j] = 1;
-         }
-       } else {
-         // this cell is currently alive
-         if (n < 2) {
-           // underpopulation --> dies
-           board0[i][j] = 0;
-         } else if (n == 2 || n == 3) {
-           // goldilocks --> lives
-           board0[i][j] = 1;
-         } else {
-           // overpopulation --> dies
-           board0[i][j] = 0;
-         }
-       }
-     }
-   }
- }
-
- /*
-  * Compute neighbors for given cell, in board1.
-  */
- int neighbors_board1(int x, int y) {
-   int up;
-   int down;
-   int left;
-   int right;
-
-   if (y >= (HEIGHT - 1)) {
-     down = 0;
-   } else {
-     down = y + 1;
-   }
-
-   if (y <= 0) {
-     up = HEIGHT - 1;
-   } else {
-     up = y - 1;
-   }
-
-   if (x >= (WIDTH - 1)) {
-     right = 0;
-   } else {
-     right = x + 1;
-   }
-
-   if (x <= 0) {
-     left = WIDTH - 1;
-   } else {
-     left = x - 1;
-   }
-
-   int n = 0;
-   n += board1[up][left];
-   n += board1[up][x];
-   n += board1[up][right];
-   n += board1[y][left];
-   n += board1[y][right];
-   n += board1[down][left];
-   n += board1[down][x];
-   n += board1[down][right];
-
-   return n;
- }
-
-/*
- * Wrapper to print board to display based on iteration.
- */
-void print_board(int iter) {
-  if (iter == 0) {
-    print_board0();
-  } else {
-    print_board1();
-  }
+// Get the cell at location (x, y).
+static cell_t get_cell(grid_t grid, size_t n_cols, size_t x, size_t y)
+{    
+    const size_t cell_index = y*n_cols + x;
+    return grid[cell_index];
 }
 
-/*
- * Print board0 to the display.
- */
-void print_board0() {
-  for (int i = 0; i < HEIGHT; i++) {
-    for (int j = 0; j < WIDTH; j++) {
-      if (board0[i][j] == 0) {
-        printf(". ");
-      } else {
-        printf("x ");
-      }
-    }
-    printf("\n");
-  }
-  printf("\n");
+// Set the cell at location (x, y).
+static void set_cell(grid_t grid, size_t n_cols, size_t x, size_t y)
+{    
+    const size_t cell_index = y*n_cols + x;
+    grid[cell_index] = 1;
 }
 
-/*
- * Print board1 to the display.
- */
-void print_board1() {
-  for (int i = 0; i < HEIGHT; i++) {
-    for (int j = 0; j < WIDTH; j++) {
-      if (board1[i][j] == 0) {
-        printf(". ");
-      } else {
-        printf("x ");
-      }
-    }
-    printf("\n");
-  }
-  printf("\n");
+// Unset the cell at location (x, y).
+static void unset_cell(grid_t grid, size_t n_cols, size_t x, size_t y)
+{    
+    const size_t cell_index = y*n_cols + x;
+    grid[cell_index] = 0;
 }
