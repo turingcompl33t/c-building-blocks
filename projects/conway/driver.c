@@ -3,10 +3,13 @@
 // 
 // Constructs a glider and runs the simulation indefinitely.
 
+#define _XOPEN_SOURCE 700
+
 #include "conway.h"
 
 #include <stdio.h>
 #include <errno.h>
+#include <signal.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -15,6 +18,8 @@
 // arbitrarily set minimum number of rows and columns to 5
 #define MIN_N_ROWS 5
 #define MIN_N_COLS 5
+
+static bool shutdown = false;
 
 // ----------------------------------------------------------------------------
 // Internal Declarations
@@ -27,6 +32,7 @@ typedef struct args
 } args_t;
 
 static args_t parse_args(int argc, char* argv[]);
+static void signal_handler(int sig_no);
 
 // ----------------------------------------------------------------------------
 // Driver
@@ -47,26 +53,33 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
+    struct sigaction sa;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags   = 0;
+    sa.sa_handler = signal_handler;
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        printf("[-] Error: failed to initialize signal handler\n");
+        return EXIT_FAILURE;
+    }
+
     // create a new context
     conway_ctx_t* ctx = conway_new(args.n_rows, args.n_cols);
 
     // set the cells to construct a glider
-    // conway_set_cell(ctx, 4, 4);
-    // conway_set_cell(ctx, 2, 1);
-    // conway_set_cell(ctx, 2, 2);
-    // conway_set_cell(ctx, 1, 2);
-    // conway_set_cell(ctx, 0, 1);
-
-    // set the cells to construct a simple oscillator
-    conway_set_cell(ctx, 2, 2);
-    conway_set_cell(ctx, 2, 1);
+    conway_set_cell(ctx, 1, 2);
     conway_set_cell(ctx, 2, 3);
+    conway_set_cell(ctx, 3, 3);
+    conway_set_cell(ctx, 3, 2);
+    conway_set_cell(ctx, 3, 1);
+
+    puts("[+] Starting simulation; CTRL-C to quit and exit");
 
     // print the initial state of the grid
     conway_print_grid(ctx);
 
     // run the simulation
-    for (;;)
+    for (;!shutdown;)
     {
         conway_simulate_n(ctx, 1);
         conway_print_grid(ctx);
@@ -99,4 +112,12 @@ static args_t parse_args(int argc, char* argv[])
     };
 
     return args;
+}
+
+static void signal_handler(int sig_no)
+{
+    if (SIGINT == sig_no)
+    {
+        shutdown = true;
+    }
 }
