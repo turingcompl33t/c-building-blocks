@@ -13,6 +13,7 @@ The objective is to look over the module definitions and the expected functional
 - [Algorithms](./algorithms)
 - [Concurrency](./concurrency)
 - [Data Structures](./data-structures)
+- [Projects](./projects)
 
 ### Working in this Project
 
