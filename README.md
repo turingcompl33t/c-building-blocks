@@ -91,7 +91,23 @@ The process is similar for Mac users with `Homebrew`:
 $ brew install check
 ```
 
-Once check is installed by the package manager, the provided unit tests should work out of the box. To check your implementation for a specific module, simply run
+The libraries and flags that `Check` requires to build successfully varies from system to system. Luckily, we can dynamically determine the correct flags that its needs at build time using the `pkg-config` tool that is available on both Linux and OSX. 
+
+On Linux, install `pkg-config` with:
+
+```
+$ sudo apt install pkg-config
+```
+
+And on OSX:
+
+```
+$ brew install pkg-config
+```
+
+The provided Makefiles use `pkg-config` internally, so you shouldn't need to do anything with it directly.
+
+With `Check` and `pkg-config` installed, you should be prepared to build the unit tests for any module. To check your implementation for a specific module, simply run
 
 ```
 $ make check
