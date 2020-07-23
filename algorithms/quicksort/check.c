@@ -10,8 +10,7 @@
 
 #include "quicksort.h"
 
-#define N_ITEMS 100
-#define N_ITERS 25
+#define N_ITEMS 500
 
 // ----------------------------------------------------------------------------
 // Definitions for Testing
@@ -19,11 +18,6 @@
 static bool less_equal(int a, int b)
 {
     return a <= b;
-}
-
-static bool greater_equal(int a, int b)
-{
-    return a >= b;
 }
 
 static void random_array(
@@ -64,20 +58,9 @@ START_TEST(test_quicksort)
     int array[N_ITEMS];
 
     // test ascending sorts
-    for (size_t i = 0; i < N_ITERS; ++i)
-    {
-        random_array(array, N_ITEMS, 0, 1000);
-        quicksort(array, 0, N_ITEMS - 1, less_equal);
-        ck_assert_msg(is_sorted(array, 0, N_ITEMS - 1, less_equal));
-    }
-
-    // test descending sorts
-    for (size_t i = 0; i < N_ITERS; ++i)
-    {
-        random_array(array, N_ITEMS, 0, 1000);
-        quicksort(array, 0, N_ITEMS - 1, greater_equal);
-        ck_assert_msg(is_sorted(array, 0, N_ITEMS - 1, less_equal));
-    }
+    random_array(array, N_ITEMS, 0, 1000);
+    quicksort(array, 0, N_ITEMS - 1, less_equal);
+    ck_assert_msg(is_sorted(array, 0, N_ITEMS - 1, less_equal));
 }
 END_TEST
 
