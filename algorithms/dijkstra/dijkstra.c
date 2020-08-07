@@ -1,7 +1,8 @@
-// bfs.c
-// Bread-first search algorithm implementation on weighted graph.
+// dijkstra.c
+// Computing single-source shortest path on 
+// a weighted graph with Dijkstra's algorithm.
 
-#include "bfs.h"
+#include "dijkstra.h"
 #include "graph.h"
 #include "visited_set.h"
 #include "priority_queue.h"
@@ -87,7 +88,7 @@ void path_entry_delete(path_entry_t* entry);
 // ----------------------------------------------------------------------------
 // Exported
 
-path_t* breadth_first_search(
+path_t* dijkstra(
     graph_t*    graph, 
     vertex_id_t src, 
     vertex_id_t dst)

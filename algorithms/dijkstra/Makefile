@@ -1,15 +1,15 @@
-# algorithms/breadth-first-search/Makefile
+# algorithms/dijkstra/Makefile
 #
-# Makefile for weighted breadth-first search algorithm.
+# Makefile for Dijkstra's algorithm graph search.
 
 CC = gcc
 CFLAGS = -Wall -Werror -std=c11 -ggdb -fmax-errors=1
 
 CHECK_FLAGS = $(shell pkg-config --cflags --libs check)
 
-OBJS = bfs.o graph.o intrusive_list.o priority_queue.o visited_set.o
+OBJS = dijkstra.o graph.o intrusive_list.o priority_queue.o visited_set.o
 
-bfs.o: bfs.c bfs.h
+dijkstra.o: dijkstra.c dijkstra.h
 graph.o: graph.c graph.h
 intrusive_list.o: intrusive_list.c intrusive_list.h
 priority_queue.o: priority_queue.c priority_queue.h
