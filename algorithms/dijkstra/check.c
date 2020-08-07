@@ -1,5 +1,5 @@
 // check.c
-// Driver program for breadth-first graph search algorithm.
+// Driver program for Dijkstra's graph search algorithm.
 
 // attribute gnu_printf
 #pragma GCC diagnostic ignored "-Wignored-attributes"
@@ -7,7 +7,7 @@
 #include <check.h>
 #include <stdlib.h>
 
-#include "bfs.h"
+#include "dijkstra.h"
 #include "graph.h"
 
 // ----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ START_TEST(test_bfs_0)
     graph_add_edge(g, v0, v3, 1);
     graph_add_edge(g, v3, v4, 3);
 
-    path_t* path = breadth_first_search(g, v0, v4);
+    path_t* path = dijkstra(g, v0, v4);
     ck_assert(path != NULL);
 
     ck_assert(path_length(path) == 3);
