@@ -7,13 +7,13 @@
 #include <check.h>
 #include <stdlib.h>
 
-#include "dijkstra.h"
 #include "graph.h"
+#include "dijkstra.h"
 
 // ----------------------------------------------------------------------------
 // Test Cases
 
-START_TEST(test_bfs_0)
+START_TEST(test_dijkstra_0)
 {
     graph_t* g = graph_new();
 
@@ -43,12 +43,12 @@ END_TEST
 // ----------------------------------------------------------------------------
 // Infrastructure
  
-Suite* bfs_suite(void)
+Suite* dijkstra_suite(void)
 {
-    Suite* s = suite_create("bfs");
-    TCase* tc_core = tcase_create("bfs-core");
+    Suite* s = suite_create("dijkstra");
+    TCase* tc_core = tcase_create("dijkstra-core");
     
-    tcase_add_test(tc_core, test_bfs_0);
+    tcase_add_test(tc_core, test_dijkstra_0);
     
     suite_add_tcase(s, tc_core);
     
@@ -57,7 +57,7 @@ Suite* bfs_suite(void)
 
 int main(void)
 {
-    Suite* suite = bfs_suite();
+    Suite* suite = dijkstra_suite();
     SRunner* runner = srunner_create(suite);
 
     srunner_run_all(runner, CK_NORMAL);    
