@@ -1,5 +1,5 @@
 // check.c
-// Driver program for graoh data structure tests.
+// Driver program for graph data structure tests.
 
 // attribute gnu_printf
 #pragma GCC diagnostic ignored "-Wignored-attributes"
