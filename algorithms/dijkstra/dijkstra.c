@@ -2,8 +2,8 @@
 // Computing single-source shortest path on 
 // a weighted graph with Dijkstra's algorithm.
 
-#include "dijkstra.h"
 #include "graph.h"
+#include "dijkstra.h"
 #include "visited_set.h"
 #include "priority_queue.h"
 
