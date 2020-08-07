@@ -97,11 +97,9 @@ path_t* dijkstra(
     priority_queue_t* queue = queue_new(
         prioritize_by_lowest_weight,
         weighted_vertex_deleter);
-    assert(queue);
 
     // construct the visited set
     visited_set_t* visited_set = set_new();
-    assert(visited_set);
 
     // construct the iterator context
     adjacent_iterator_ctx_t iterator_ctx = {
@@ -132,8 +130,10 @@ path_t* dijkstra(
 
         // now that v has been popped, we are assured that we
         // have found the lowest-weight path from the src vertex
-        // to v (because we assume no negative weight cycles) so
-        // we can safely add v to the visited set with current weight
+        // to v (because we assume no negative weight egdes, 
+        // perhaps we'll take a crack at Bellman-Ford in a future 
+        // module to overcome this limitation) so we can safely 
+        // add v to the visited set with current weight
 
         // mark the vertex as visited
         set_add(visited_set, v->id, v->backpointer, v->weight);
@@ -282,6 +282,9 @@ static weighted_vertex_t* new_weighted_vertex(
     ssize_t     weight)
 {
     weighted_vertex_t* wv = malloc(sizeof(weighted_vertex_t));
+    
+    // NOTE: obviously this error-handling leaves much to
+    // be desired, but we all need to choose our battles
     assert(wv);
 
     wv->id          = id;
@@ -331,10 +334,7 @@ path_t* backtrace(
 path_t* path_new()
 {
     path_t* path = malloc(sizeof(path_t));
-    if (NULL == path)
-    {
-        return NULL;
-    }
+    assert(path);
 
     path->head   = NULL;
     path->length = 0;
@@ -354,10 +354,7 @@ void path_push(path_t* path, vertex_id_t id)
 path_entry_t* path_entry_new(vertex_id_t id)
 {
     path_entry_t* entry = malloc(sizeof(path_entry_t));
-    if (NULL == entry)
-    {
-        return NULL;
-    }
+    assert(entry);
 
     entry->id = id;
     return entry;
