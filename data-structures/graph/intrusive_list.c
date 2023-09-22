@@ -112,12 +112,60 @@ size_t list_count(list_entry_t* head)
 
     size_t count = 0;
     list_entry_t* current;
-    for (current = head->flink; current != head; current = current->flink)
+    for (current = head->flink; 
+         current != head; 
+         current = current->flink)
     {
         ++count;
     }
 
     return count;
+}
+
+list_entry_t* list_find(
+    list_entry_t* head, 
+    predicate_f   pred, 
+    void*         ctx)
+{
+    if (NULL == head || list_is_empty(head))
+    {
+        return NULL;
+    }
+
+    bool found = false;
+
+    list_entry_t* current;
+    for (current = head->flink; 
+         current != head; 
+         current = current->flink)
+    {
+        if (pred(current, ctx))
+        {
+            found = true;
+            break;
+        }
+    }
+
+    return found ? current : NULL;
+}
+
+void list_for_each(
+    list_entry_t* head, 
+    list_iter_f   iter, 
+    void*         ctx)
+{
+    if (NULL == head || list_is_empty(head))
+    {
+        return;
+    }
+
+    list_entry_t* current;
+    for (current = head->flink; 
+         current != head; 
+         current = current->flink)
+    {
+        iter(current, ctx);
+    }
 }
 
 // ----------------------------------------------------------------------------

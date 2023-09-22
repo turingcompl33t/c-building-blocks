@@ -10,5 +10,16 @@ int accumulate(
     int start, 
     binary_op_f op)
 {
-    return 0;
+    if (first >= last)
+    {
+        return 0;
+    }
+
+    int accumulator = start;
+    for (size_t i = first; i < last; ++i)
+    {
+        accumulator = op(accumulator, array[i]);
+    }
+
+    return accumulator;
 }
